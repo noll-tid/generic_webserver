@@ -13,7 +13,15 @@ while True:
         s.settimeout(3.0)
         req = client_s.recv(4096)
         s.settimeout(None)
-        client_s.send(req)
+        get = req.decode().split('\r\n')[0]
+        try:
+            typ, url, version = get.split(' ')
+        except:
+            client_s.close()
+        if url == '/measure':
+            client_s.send('20 degrees')
+        else:
+            client_s.send('Unknown Command')
         client_s.close()
     except OSError as e:
         client_s.close()
